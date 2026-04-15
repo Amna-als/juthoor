@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
@@ -159,6 +160,13 @@ export default function SignupPage() {
         >
           {loading ? 'Creating account...' : 'Sign Up'}
         </button>
+
+        <p className="text-center text-sm text-[#8d8179]">
+          Already have an account?{' '}
+          <Link href="/login" className="font-medium text-[#617c2f] hover:underline">
+            Login
+          </Link>
+        </p>
 
         {message && (
           <div className="rounded-2xl border border-[#d7e7c0] bg-[#f3f8ea] px-4 py-3 text-sm text-[#58702a]">
