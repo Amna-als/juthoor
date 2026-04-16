@@ -95,7 +95,7 @@ export default function SubmitRequestPage() {
       title="Submit Request"
       subtitle="Choose a request type and complete the required information."
     >
-      <div className="max-w-[760px] rounded-[22px] border border-[#e6ddd6] bg-white p-8 shadow-sm">
+      <div className="mx-auto max-w-[760px] rounded-[22px] border border-[#e6ddd6] bg-white p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="mb-2 block text-sm font-medium text-[#6e625b]">Request Type</label>

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import Logo from '@/app/components/Logo'
 
 type AppShellProps = {
   title: string
@@ -67,15 +68,7 @@ export default function AppShell({
     { label: 'My Profile', arabic: 'حسابي', href: '/my-profile' },
   ]
 
-  const verifierNavItems: NavItem[] = [
-    { label: 'Home', arabic: 'الرئيسية', href: '/' },
-    { label: 'Discover', arabic: 'اكتشف', href: '/discover' },
-    { label: 'Donate', arabic: 'تبرع', href: '/donate' },
-    { label: 'Recipes', arabic: 'وصفات', href: '/recipes' },
-    { label: 'Find Relatives', arabic: 'ابحث عن أقارب', href: '/find-relatives' },
-    { label: 'Museum', arabic: 'متحف', href: '/museum' },
-    { label: 'My Profile', arabic: 'حسابي', href: '/my-profile' },
-  ]
+  const verifierNavItems: NavItem[] = memberNavItems
 
   const lowerItems: NavItem[] = verifierMode
     ? [{ label: 'Verify Requests', arabic: '', href: '/verifier-dashboard' }]
@@ -99,8 +92,15 @@ export default function AppShell({
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f5f2] text-[#3a2a23]">
+    <div className="relative min-h-screen bg-[#f7f5f2] text-[#3a2a23]">
+
+      {/* 🔥 TOP RIGHT LOGO */}
+      <div className="absolute right-8 top-6 z-50">
+        <Logo />
+      </div>
+
       <div className="flex min-h-screen">
+        {/* SIDEBAR */}
         <aside className="flex w-[250px] flex-col bg-[#2b170f] text-white">
           <div className="px-4 pb-6 pt-4">
             <div className="flex items-start gap-3">
@@ -114,6 +114,7 @@ export default function AppShell({
             </div>
           </div>
 
+          {/* NAVIGATION */}
           <nav className="flex-1 space-y-1 px-3">
             {navItems.map((item) => {
               const active = pathname === item.href
@@ -167,6 +168,7 @@ export default function AppShell({
             })}
           </nav>
 
+          {/* USER SECTION */}
           <div className="border-t border-[#5a4337] px-4 py-5">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#5a4337] text-sm font-semibold">
@@ -195,6 +197,7 @@ export default function AppShell({
           </div>
         </aside>
 
+        {/* MAIN CONTENT */}
         <main className="flex-1 overflow-x-auto px-8 py-6">
           <div className="mx-auto max-w-[1120px]">
             <section className="border-b border-[#e8dfd8] bg-white px-8 py-8">

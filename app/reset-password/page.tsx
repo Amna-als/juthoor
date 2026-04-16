@@ -6,20 +6,39 @@ import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import AuthShell from '@/app/components/AuthShell'
 
-export default function LoginPage() {
+export default function ResetPasswordPage() {
   const router = useRouter()
-  const [email, setEmail] = useState('')
+
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const validatePassword = (value: string) => {
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+    return regex.test(value)
+  }
+
+  const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault()
     setMessage('')
+
+    if (!validatePassword(password)) {
+      setMessage(
+        'Password must be at least 8 characters and include uppercase, lowercase, number, and special character.'
+      )
+      return
+    }
+
+    if (password !== confirmPassword) {
+      setMessage('Passwords do not match.')
+      return
+    }
+
     setLoading(true)
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
+    const { error } = await supabase.auth.updateUser({
       password,
     })
 
@@ -29,72 +48,50 @@ export default function LoginPage() {
       return
     }
 
-    const user = data.user
+    setMessage('Password updated successfully. Redirecting to login...')
+    setLoading(false)
 
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-
-    if (profileError || !profile) {
-      setMessage('Login succeeded, but no profile record was found for this account.')
-      setLoading(false)
-      return
-    }
-
-    if (profile.role === 'verifier') {
-      router.push('/verifier-dashboard')
-    } else {
-      router.push('/my-requests')
-    }
+    setTimeout(() => {
+      router.push('/login')
+    }, 1500)
   }
 
   return (
     <AuthShell
-      title="Login"
-      subtitle="Access your account to submit and track your requests."
+      title="Reset Password"
+      subtitle="Enter your new password below."
     >
-      <form className="space-y-4" onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email address"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full rounded-2xl border border-[#ded6cf] bg-white px-4 py-3 text-[#3a2a23] outline-none placeholder:text-[#9a8f88]"
-          required
-        />
-
+      <form className="space-y-4" onSubmit={handleResetPassword}>
         <input
           type="password"
-          placeholder="Password"
+          placeholder="New password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="w-full rounded-2xl border border-[#ded6cf] bg-white px-4 py-3 text-[#3a2a23] outline-none placeholder:text-[#9a8f88]"
           required
         />
 
-        <div className="flex justify-end">
-          <Link
-            href="/forgot-password"
-            className="text-sm font-medium text-[#617c2f] hover:underline"
-          >
-            Forgot password?
-          </Link>
-        </div>
+        <input
+          type="password"
+          placeholder="Confirm new password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          className="w-full rounded-2xl border border-[#ded6cf] bg-white px-4 py-3 text-[#3a2a23] outline-none placeholder:text-[#9a8f88]"
+          required
+        />
 
         <button
           type="submit"
           disabled={loading}
           className="w-full rounded-2xl bg-[#8cab45] px-4 py-3 font-medium text-white transition hover:bg-[#7d9c3d] disabled:opacity-50"
         >
-          {loading ? 'Logging in...' : 'Login'}
+          {loading ? 'Updating...' : 'Reset Password'}
         </button>
 
         <p className="text-center text-sm text-[#8d8179]">
-          Don&apos;t have an account?{' '}
-          <Link href="/signup" className="font-medium text-[#617c2f] hover:underline">
-            Sign up
+          Back to{' '}
+          <Link href="/login" className="font-medium text-[#617c2f] hover:underline">
+            Login
           </Link>
         </p>
 

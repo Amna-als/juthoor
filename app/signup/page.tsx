@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import PrototypeShell from '@/app/components/PrototypeShell'
+import AuthShell from '@/app/components/AuthShell'
 
 export default function SignupPage() {
   const router = useRouter()
@@ -101,11 +101,11 @@ export default function SignupPage() {
   }
 
   return (
-    <PrototypeShell
+    <AuthShell
       title="Create Account"
       subtitle="Join Juthoor to reconnect and support your community."
     >
-      <form className="max-w-[520px] space-y-4" onSubmit={handleSignup}>
+      <form className="space-y-4" onSubmit={handleSignup}>
         <div className="grid grid-cols-2 gap-3">
           <input
             type="text"
@@ -174,6 +174,6 @@ export default function SignupPage() {
           </div>
         )}
       </form>
-    </PrototypeShell>
+    </AuthShell>
   )
 }
